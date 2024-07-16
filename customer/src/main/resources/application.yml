@@ -1,0 +1,32 @@
+server.port: 8082
+spring:
+  application:
+    name: shopping-app
+
+  resources:
+    static-locations: classpath:/static/
+  datasource:
+    url: jdbc:mysql://localhost:3306/shopping_app?allowPublicKeyRetrieval=true&useSSL=false
+    username: springstudent
+    password: springstudent
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 2
+      idle-timeout: 30000
+  # Hibernate Properties
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+  # session:
+  #   store-type: jdbc
+# server:
+#   servlet:
+#     session:
+#       cookie:
+#         name: JSESSIONID
+#         path: /
+#         http-only: true
+#         secure: true
+
+logging.config: classpath:log4j2.xml
+logging.level.root: info

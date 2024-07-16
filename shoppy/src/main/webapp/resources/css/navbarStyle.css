@@ -1,0 +1,27 @@
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.btn-outline-success {
+  color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-outline-success:hover {
+  background-color: #28a745;
+  color: #ffffff;
+}
+
+.cart {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #ffffff;
+}
