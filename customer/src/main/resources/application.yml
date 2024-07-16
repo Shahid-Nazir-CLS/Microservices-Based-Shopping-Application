@@ -2,7 +2,19 @@ server.port: 8082
 spring:
   application:
     name: shopping-app
-
+  # security:
+  #   user:
+  #     name: root
+  #     password: root
+  #   oauth2:
+  #     client:
+  #       registration:
+  #         # github:
+  #         #   clientId: Ov23liiYwb6S4Cg0U02d
+  #         #   clientSecret: 4317b8ccb72d7ce879e8d887e5705a1fc9e32d15
+  #         google:
+  #           clientId: 392652762784-ssi8llseno3mg97cjaspj4hkccfoo05i.apps.googleusercontent.com
+  #           clientSecret: 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
   resources:
     static-locations: classpath:/static/
   datasource:
