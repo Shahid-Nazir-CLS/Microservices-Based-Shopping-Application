@@ -1,6 +1,5 @@
 package com.shoppy.cart.dto;
 
-import com.shoppy.order.dto.ItemDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,28 +1,25 @@
-// package com.example.customer.configuration;
+package com.example.customer.configuration;
 
-// import javax.sql.DataSource;
+import javax.sql.DataSource;
 
-// import org.springframework.context.annotation.Bean;
-// import org.springframework.context.annotation.Configuration;
-// import org.springframework.jdbc.core.JdbcOperations;
-// import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
-// import
-// org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
-// import org.springframework.session.web.http.CookieSerializer;
-// import org.springframework.session.web.http.DefaultCookieSerializer;
-// import org.springframework.transaction.support.TransactionOperations;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcOperations;
+import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
+import
+org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
+import org.springframework.session.web.http.CookieSerializer;
+import org.springframework.session.web.http.DefaultCookieSerializer;
 
-// @Configuration
-// @EnableJdbcHttpSession
-// public class SessionConfig {
+@Configuration
+@EnableJdbcHttpSession
+public class SessionConfig {
 
-// // @Bean
-// // public CookieSerializer cookieSerializer() {
-// // DefaultCookieSerializer serializer = new DefaultCookieSerializer();
-// // serializer.setCookieName("JSESSIONID");
-// // serializer.setCookiePath("/");
-// // serializer.setDomainNamePattern("^.+?\\.(\\w+\\.[a-z]+)$");
-// // serializer.setUseBase64Encoding(false);
-// // return serializer;
-// // }
-// }
+    @Bean
+    public CookieSerializer cookieSerializer() {
+        DefaultCookieSerializer serializer = new DefaultCookieSerializer();
+        serializer.setCookieMaxAge(60 * 60 * 24 * 2); // 2 days in seconds
+        serializer.setDomainName("localhost");
+        return serializer;
+    }
+}

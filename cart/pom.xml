@@ -12,7 +12,7 @@
 	<groupId>com.shoppy</groupId>
 	<artifactId>cart</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>item</name>
+	<name>cart</name>
 	<description>Demo project for Spring Boot</description>
 	<url />
 	<licenses>
@@ -33,8 +33,15 @@
 		<modelmapper.version>3.2.0</modelmapper.version>
 		<mysql_connector.version>8.4.0</mysql_connector.version>
 		<swagger.version>2.5.0</swagger.version>
+		<spring-cloud.version>2023.0.3</spring-cloud.version>
+
 	</properties>
 	<dependencies>
+	<dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+    </dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -61,6 +68,17 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+			<dependency>
+		      <groupId>org.springframework.boot</groupId>
+		      <artifactId>spring-boot-starter-actuator</artifactId>
+			  <exclusions>
+		        <exclusion>
+		            <groupId>org.springframework.boot</groupId>
+		            <artifactId>spring-boot-starter-logging</artifactId>
+		        </exclusion>
+	    	</exclusions>
+		    </dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -107,6 +125,17 @@
 
 
 	</dependencies>
+	    <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
 	<build>
 		<plugins>

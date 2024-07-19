@@ -10,6 +10,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,6 +61,13 @@ public class CustomerController {
     public CustomerDTO getCustomer(@PathVariable("customerId") int customerId) {
         logger.info("Retrieving customer with ID: {}", customerId);
         return customerService.getCustomer(customerId);
+    }
+
+    @Operation(summary = "Get Customer", description = "Retrieve a customer by their Email")
+    @GetMapping("/email/{email}")
+    public CustomerDTO getCustomerByEmail(@PathVariable("email") String email) {
+        logger.info("Retrieving customer with Email: {}", email);
+        return customerService.getCustomerByEmail(email);
     }
 
     @Operation(summary = "Save or Update Customer", description = "Save a new customer or update an existing one")

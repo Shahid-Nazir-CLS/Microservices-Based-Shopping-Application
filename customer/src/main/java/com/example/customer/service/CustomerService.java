@@ -1,15 +1,11 @@
 package com.example.customer.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.customer.dto.AddressDTO;
 import com.example.customer.dto.CustomerDTO;
-import com.example.customer.model.Address;
 import com.example.customer.model.Customer;
 import com.example.customer.repository.CustomerDAO;
 
@@ -35,7 +31,6 @@ public class CustomerService {
     }
 
     // save Customer
-
     public CustomerDTO updateCustomer(CustomerDTO customerDTO) {
         // Retrieve existing customer if it exists
         Customer customer = customerDAO.findById(customerDTO.getCustomerId())
@@ -63,5 +58,12 @@ public class CustomerService {
 
         // Map saved entity back to DTO
         return modelMapper.map(savedCustomer, CustomerDTO.class);
+    }
+
+    public  CustomerDTO getCustomerByEmail(String email){
+        Customer customer = customerDAO.findByEmail((email));
+        System.out.println(customer);
+        if(customer == null) return null;
+        return modelMapper.map(customer, CustomerDTO.class);
     }
 }

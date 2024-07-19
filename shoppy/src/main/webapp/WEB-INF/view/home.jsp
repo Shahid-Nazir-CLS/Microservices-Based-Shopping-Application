@@ -18,7 +18,7 @@
 
         <body class="d-flex flex-column min-vh-100 pt-5">
 
-            <!-- Include Navigation Component -->
+            Include Navigation Component
             <%@ include file="navbar.jsp" %>
 
                 <!-- Main Content -->
@@ -64,9 +64,18 @@
                                                         <p class="out-stock">Out of stock</p>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <button onclick="addItem(${item.id})"
-                                                            class="btn btn-primary">Add to Cart</button>
-                                                        <p>In stock</p>
+                                                        <c:choose>
+                                                            <c:when test="${isLoggedIn and not empty username}">
+                                                                <button onclick="addItem(${item.id})"
+                                                                    class="btn btn-primary">Add to Cart</button>
+                                                                <p>In stock</p>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <button onclick="showLoginMessage()"
+                                                                    class="btn btn-primary">Add to Cart</button>
+                                                                <p>In stock</p>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </div>
@@ -140,6 +149,10 @@
                     <script>
                         function addItem(itemId) {
                             window.location.href = '/addItem/' + itemId + "/home";
+                        }
+
+                        function showLoginMessage() {
+                            alert('Please login first to add items to your cart.');
                         }
                     </script>
 

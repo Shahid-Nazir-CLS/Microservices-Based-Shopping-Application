@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.shoppy.dto.CustomerDTO;
+import com.example.shoppy.dto.UserSessionDTO;
 import com.example.shoppy.service.CustomerService;
 
 
@@ -21,15 +22,21 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private UserSessionDTO userSessionDTO;
+
     @GetMapping("/profile")
     public String getProfile(Model model) {
-        int userId = 1; // Example, replace with actual user identification logic
+        int userId = userSessionDTO.getUserId(); // Example, replace with actual user identification logic
         logger.info("Fetching profile details for user ID: " + userId);
 
         CustomerDTO customerDTO = customerService.getCustomer(userId);
         model.addAttribute("customer", customerDTO);
         model.addAttribute("addresses", customerDTO.getAddresses());
         model.addAttribute("defaultAddress", customerDTO.getDefaultAddress());
+        model.addAttribute("isLoggedIn", userSessionDTO.isLoggedIn());
+        model.addAttribute("username", userSessionDTO.getUsername());
+
 
         logger.info("Profile details retrieved successfully for user ID: " + userId);
         return "profile";
@@ -41,6 +48,8 @@ public class CustomerController {
 
         CustomerDTO customerDTO = customerService.getCustomer(customerId);
         model.addAttribute("customer", customerDTO);
+        model.addAttribute("isLoggedIn", userSessionDTO.isLoggedIn());
+        model.addAttribute("username", userSessionDTO.getUsername());
 
         logger.info("Edit profile details retrieved successfully for customer ID: " + customerId);
         return "editProfile";

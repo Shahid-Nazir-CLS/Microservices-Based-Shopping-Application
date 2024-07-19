@@ -10,26 +10,29 @@ import com.example.shoppy.dto.CartItemDTO;
 
 @Service
 public class CartService {
+
     @Autowired
     private RestTemplate restTemplate;
 
+    private static final String BASE_URL = "http://cart-service/api/v1/carts/";
+
     public CartDTO getUserCart(int userId) {
-        return restTemplate.getForObject("http://localhost:8083/api/v1/carts/" + userId, CartDTO.class);
+        return restTemplate.getForObject(BASE_URL + userId, CartDTO.class);
     }
 
     public CartItemDTO addItemToCart(int userId, int itemId) {
-        return restTemplate.postForObject("http://localhost:8083/api/v1/carts/" + userId + "/items/" + itemId, null, CartItemDTO.class);
+        return restTemplate.postForObject(BASE_URL + userId + "/items/" + itemId, null, CartItemDTO.class);
     }
 
     public void removeItemFromCart(int userId, int cartItemId) {
-        restTemplate.exchange("http://localhost:8083/api/v1/carts/" + userId + "/items/" + cartItemId, HttpMethod.DELETE, null, Void.class);
+        restTemplate.exchange(BASE_URL + userId + "/items/" + cartItemId, HttpMethod.DELETE, null, Void.class);
     }
 
     public void clearCart(int userId) {
-        restTemplate.exchange("http://localhost:8083/api/v1/carts/" + userId, HttpMethod.DELETE, null, Void.class);
+        restTemplate.exchange(BASE_URL + userId, HttpMethod.DELETE, null, Void.class);
     }
 
     public void updateQuantity(int userId, int cartItemId, int newQuantity) {
-        restTemplate.exchange("http://localhost:8083/api/v1/carts/" + userId + "/items/" + cartItemId + "?newQuantity=" + newQuantity, HttpMethod.PUT, null, Void.class);
+        restTemplate.exchange(BASE_URL + userId + "/items/" + cartItemId + "?newQuantity=" + newQuantity, HttpMethod.PUT, null, Void.class);
     }
 }

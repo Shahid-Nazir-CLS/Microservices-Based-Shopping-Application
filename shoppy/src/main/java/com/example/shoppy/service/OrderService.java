@@ -10,23 +10,32 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.shoppy.dto.OrderDTO;
+// import com.example.shoppy.kafka.KafkaProducerService;
+import com.example.shoppy.kafka.KafkaProducerService;
 
 @Service
 public class OrderService {
+
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private KafkaProducerService kafkaProducerService;
+
+    private static final String BASE_URL = "http://order-service/api/v1/orders/";
+
     public OrderDTO cancelOrder(int orderId) {
-        ResponseEntity<OrderDTO> response = restTemplate.exchange("http://localhost:8083/api/v1/orders/cancel/" + orderId, HttpMethod.PUT, null, OrderDTO.class);
+        ResponseEntity<OrderDTO> response = restTemplate.exchange(BASE_URL + "cancel/" + orderId, HttpMethod.PUT, null, OrderDTO.class);
         return response.getBody();
     }
 
-    public OrderDTO createOrder(int customerId) {
-        return restTemplate.postForObject("http://localhost:8083/api/v1/orders/" + customerId, null, OrderDTO.class);
+    public void createOrder(int customerId) {
+        // Send message to Kafka
+        kafkaProducerService.sendMessage(new String(String.valueOf(customerId)));
     }
 
     public List<OrderDTO> getCustomerOrders(int userId) {
-        ResponseEntity<List<OrderDTO>> response = restTemplate.exchange("http://localhost:8083/api/v1/orders/customer/" + userId,
+        ResponseEntity<List<OrderDTO>> response = restTemplate.exchange(BASE_URL + "customer/" + userId,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<OrderDTO>>() {}
@@ -35,6 +44,6 @@ public class OrderService {
     }
 
     public OrderDTO getOrderDetails(int orderId) {
-        return restTemplate.getForObject("http://localhost:8083/api/v1/orders/" + orderId, OrderDTO.class);
+        return restTemplate.getForObject(BASE_URL + orderId, OrderDTO.class);
     }
 }

@@ -3,11 +3,14 @@ package com.example.customer.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+
+
 @Controller
 public class LoginController {
 
-    @GetMapping("/login")
+    @GetMapping("/login2")
     public String login() {
+        System.out.println("here  in controller login method");
         return "login";
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.shoppy.dto.AddressDTO;
+import com.example.shoppy.dto.UserSessionDTO;
 import com.example.shoppy.service.CustomerService;
 
 @Controller
@@ -20,11 +21,16 @@ public class AddressController {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private UserSessionDTO userSessionDTO;
+
     @GetMapping("/newaddress/{customerId}")
     public String newAddress(Model model, @PathVariable("customerId") int customerId) {
         logger.info("Creating new address form for customer ID: " + customerId);
 
-        model.addAttribute("customerId", customerId);
+        model.addAttribute("customerId", userSessionDTO.getUserId());
+        model.addAttribute("isLoggedIn", userSessionDTO.isLoggedIn());
+        model.addAttribute("username", userSessionDTO.getUsername());
         return "newAddress";
     }
 
@@ -40,6 +46,8 @@ public class AddressController {
         }
 
         model.addAttribute("address", addressDTO);
+        model.addAttribute("isLoggedIn", userSessionDTO.isLoggedIn());
+        model.addAttribute("username", userSessionDTO.getUsername());
         return "editAddress";
     }
 
@@ -63,7 +71,7 @@ public class AddressController {
     public String setDefaultAddress(@PathVariable("addressId") int addressId) {
         logger.info("Setting address with ID: " + addressId + " as default");
 
-        int userId = 1; // Example, replace with actual user identification logic
+        int userId = userSessionDTO.getUserId(); // Example, replace with actual user identification logic
         customerService.setDefaultAddress(userId, addressId);
         return "redirect:/profile";
     }

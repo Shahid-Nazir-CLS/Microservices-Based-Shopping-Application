@@ -2,6 +2,7 @@
 <nav class="navbar navbar-dark bg-dark fixed-top">
     <a class="navbar-brand" href="/">My Shopping App</a>
 
+
     <div class="d-flex ml-auto">
         <form class="form-inline" method="GET" action="/search">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" name="keyword">
@@ -9,15 +10,23 @@
         </form>
         <ul class="navbar-nav ml-3">
             <li class="nav-item mr-3 mt-1">
-                <a class="btn btn-outline-success cart" href="/cart">&#128722; Cart</a>
-                <a href="/profile"><span class="user-name">Shahid Nazir</span></a>
-                <a href="/login"><span class="user-name">Login</span></a>
+                <c:choose>
+                    <c:when test="${isLoggedIn and not empty username}">
+                        <a class="btn btn-outline-success cart" href="/cart">&#128722; Cart</a>
+                        <a href="/profile"><span class="user-name">${username}</span></a>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="http://localhost:8082/login2"><span class="user-name">Login</span></a>
+                    </c:otherwise>
+                </c:choose>
             </li>
         </ul>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <c:if test="${isLoggedIn and not empty username}">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </c:if>
     </div>
 
     <div class="collapse navbar-collapse bg-body-tertiary" id="navbarSupportedContent">
@@ -29,7 +38,7 @@
                 <a class="nav-link nav-items" href="/orders">View Orders</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-items" href="/">Logout</a>
+                <a class="nav-link nav-items" href="http://localhost:8082/logout">Logout</a>
             </li>
         </ul>
     </div>

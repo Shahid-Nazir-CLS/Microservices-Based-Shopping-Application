@@ -2,6 +2,7 @@ package com.shoppy.cart.config;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -9,7 +10,6 @@ import org.modelmapper.config.Configuration.AccessLevel;
 
 import com.shoppy.cart.dto.CartItemDTO;
 import com.shoppy.cart.model.CartItem;
-import com.shoppy.order.dto.ItemDTO;
 
 @Configuration
 public class CommonConfiguration {
@@ -44,6 +44,7 @@ public class CommonConfiguration {
 	}
 
 	@Bean
+	@LoadBalanced
 	public RestTemplate getRestTemplate() {
 		return new RestTemplate();
 	}

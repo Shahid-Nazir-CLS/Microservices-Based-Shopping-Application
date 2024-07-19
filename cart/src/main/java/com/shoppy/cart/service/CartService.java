@@ -12,12 +12,12 @@ import org.springframework.web.client.RestTemplate;
 
 import com.shoppy.cart.dto.CartDTO;
 import com.shoppy.cart.dto.CartItemDTO;
+import com.shoppy.cart.dto.ItemDTO;
+import com.shoppy.cart.dto.ItemDTOsResponse;
 import com.shoppy.cart.model.Cart;
 import com.shoppy.cart.model.CartItem;
 import com.shoppy.cart.repository.CartDAO;
 import com.shoppy.cart.repository.CartItemDAO;
-import com.shoppy.order.dto.ItemDTO;
-import com.shoppy.order.dto.ItemDTOsResponse;
 
 import jakarta.transaction.Transactional;
 
@@ -53,7 +53,7 @@ public class CartService {
             List<Integer> itemIds = cart.getCartItems().stream().map(CartItem::getItemId).collect(Collectors.toList());
 
             // get items from ids
-            ItemDTOsResponse itemDTOsResponse = restTemplate.postForObject("http://localhost:8081/api/v1/items/byIds",
+            ItemDTOsResponse itemDTOsResponse = restTemplate.postForObject("http://item-service/api/v1/items/byIds",
                     itemIds,
                     ItemDTOsResponse.class);
 
@@ -111,7 +111,7 @@ public class CartService {
 
             // else add item
             // first convert dto to item and save
-            ItemDTO itemDto = restTemplate.getForObject("http://localhost:8081/api/v1/items/"+ itemId, ItemDTO.class);
+            ItemDTO itemDto = restTemplate.getForObject("http://item-service/api/v1/items/"+ itemId, ItemDTO.class);
             cartItemDTO = new CartItemDTO(0, cart.getCartId(), 1, itemDto.getPrice(), itemId, itemDto); 
             CartItem cartItem = modelMapper.map(cartItemDTO, CartItem.class);
             cartItem.setCartId(cart.getCartId());

@@ -14,16 +14,19 @@ import com.example.shoppy.dto.ItemsResponseDTO;
 
 @Service
 public class ItemService {
+
     @Autowired
     private RestTemplate restTemplate;
 
+    private static final String BASE_URL = "http://item-service/api/v1/items";
+
     public ItemsResponseDTO getItems(String pageNumber) {
-        return restTemplate.getForObject("http://localhost:8081/api/v1/items?page=" + pageNumber, ItemsResponseDTO.class);
+        return restTemplate.getForObject(BASE_URL + "?page=" + pageNumber, ItemsResponseDTO.class);
     }
 
     public List<ItemDTO> searchItems(String keyword) {
         ResponseEntity<List<ItemDTO>> response = restTemplate.exchange(
-                "http://localhost:8081/api/v1/items/search?keyword=" + keyword,
+                BASE_URL + "/search?keyword=" + keyword,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<ItemDTO>>() {}
@@ -32,6 +35,6 @@ public class ItemService {
     }
 
     public ItemDTO getItemDetails(String itemId) {
-        return restTemplate.getForObject("http://localhost:8081/api/v1/items/" + itemId, ItemDTO.class);
+        return restTemplate.getForObject(BASE_URL + "/" + itemId, ItemDTO.class);
     }
 }
