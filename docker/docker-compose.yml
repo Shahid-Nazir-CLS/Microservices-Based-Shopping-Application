@@ -1,0 +1,252 @@
+version: '3.8'
+
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - spring
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 5000
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    networks:
+      - spring
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9092,OUTSIDE://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9093
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  shoppy-mysqldb:
+    image: shahid1177/shoppy-mysqldb-image
+    container_name: shoppy-mysqldb
+    ports:
+      - "3306:3306"
+    networks:
+      - spring
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=shopping_app
+      - MYSQL_USER=springstudent
+      - MYSQL_PASSWORD=springstudent
+
+  eureka-server:
+    image: shahid1177/eurekatest
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - spring
+
+  api-gateway-server:
+    image: shahid1177/api-gateway-image
+    container_name: api-gateway-server
+    ports:
+      - "9191:9191"
+    networks:
+      - spring
+    depends_on:
+      eureka-server:
+        condition: service_started
+    environment:
+      - SPRING_APPLICATION_JSON={"eureka":{"client":{"serviceUrl":{"defaultZone":"http://eureka-server:8761/eureka"}}}}
+      
+
+  config-server:
+    image: shahid1177/config-server-image
+    container_name: config-server
+    ports:
+      - "8087:8087"
+    networks:
+      - spring
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8087/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - spring
+
+  shoppy-service:
+    image: shahid1177/shoppy-image
+    container_name: shoppy-service
+    ports:
+      - "8080:8080"
+    networks:
+      - spring
+    depends_on:
+      config-server:
+        condition: service_healthy
+      zookeeper:
+        condition: service_started
+      api-gateway-server:
+        condition: service_started
+      kafka:
+        condition: service_started
+      item-service:
+        condition: service_started
+      customer-service:
+        condition: service_healthy
+      cart-service:
+        condition: service_started
+      order-service:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+      shoppy-mysqldb:
+        condition: service_started
+      # zipkin:
+      #   condition: service_started
+    environment:
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8087
+      - SPRING_APPLICATION_JSON={"eureka":{"client":{"serviceUrl":{"defaultZone":"http://eureka-server:8761/eureka"}}}}
+      - SPRING_DATASOURCE_URL=jdbc:mysql://shoppy-mysqldb:3306/shopping_app?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_PASSWORD=springstudent
+      - SPRING_DATASOURCE_USERNAME=springstudent
+      # - SPRING_ZIPKIN_BASE_URL=http://zipkin:9411
+
+  cart-service:
+    image: shahid1177/carttest
+    container_name: cart-service
+    ports:
+      - "8083:8083"
+    networks:
+      - spring
+    depends_on:
+      # config-server:
+      #   condition: service_healthy
+      # zookeeper:
+      #   condition: service_started
+      # kafka:
+      #   condition: service_started
+      item-service:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+      shoppy-mysqldb:
+        condition: service_started
+      # zipkin:
+      #   condition: service_started
+    environment:
+      # - SPRING_CLOUD_CONFIG_URI=http://config-server:8087
+      - SPRING_APPLICATION_JSON={"eureka":{"client":{"serviceUrl":{"defaultZone":"http://eureka-server:8761/eureka"}}}}
+      - SPRING_DATASOURCE_URL=jdbc:mysql://shoppy-mysqldb:3306/shopping_app?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_PASSWORD=springstudent
+      - SPRING_DATASOURCE_USERNAME=springstudent
+      # - SPRING_ZIPKIN_BASE_URL=http://zipkin:9411
+
+  order-service:
+    image: shahid1177/ordertest
+    container_name: order-service
+    ports:
+      - "8085:8085"
+    networks:
+      - spring
+    depends_on:
+      # config-server:
+      #   condition: service_healthy
+      zookeeper:
+        condition: service_started
+      kafka:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+      shoppy-mysqldb:
+        condition: service_started
+      item-service:
+        condition: service_started
+      customer-service:
+        condition: service_started
+      zipkin:
+        condition: service_started
+    environment:
+      # - SPRING_CLOUD_CONFIG_URI=http://config-server:8087
+      - SPRING_APPLICATION_JSON={"eureka":{"client":{"serviceUrl":{"defaultZone":"http://eureka-server:8761/eureka"}}}}
+      - SPRING_DATASOURCE_URL=jdbc:mysql://shoppy-mysqldb:3306/shopping_app?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_PASSWORD=springstudent
+      - SPRING_DATASOURCE_USERNAME=springstudent
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      # - SPRING_ZIPKIN_BASE_URL=http://zipkin:9411
+
+  item-service:
+    image: shahid1177/itemtest
+    container_name: item-service
+    ports:
+      - "8081:8081"
+    networks:
+      - spring
+    depends_on:
+      # config-server:
+      #   condition: service_healthy
+      # zookeeper:
+      #   condition: service_started
+      # kafka:
+      #   condition: service_started
+      eureka-server:
+        condition: service_started
+      shoppy-mysqldb:
+        condition: service_started
+      # zipkin:
+      #   condition: service_started
+    environment:
+      # - SPRING_CLOUD_CONFIG_URI=http://config-server:8087
+      - SPRING_APPLICATION_JSON={"eureka":{"client":{"serviceUrl":{"defaultZone":"http://eureka-server:8761/eureka"}}}}
+      - SPRING_DATASOURCE_URL=jdbc:mysql://shoppy-mysqldb:3306/shopping_app?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_PASSWORD=springstudent
+      - SPRING_DATASOURCE_USERNAME=springstudent
+      # - SPRING_ZIPKIN_BASE_URL=http://zipkin:9411
+
+  customer-service:
+    image: shahid1177/customertest
+    container_name: customer-service
+    ports:
+      - "8082:8082"
+    networks:
+      - spring
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8082/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    depends_on:
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+      shoppy-mysqldb:
+        condition: service_started
+      zipkin:
+        condition: service_started
+    environment:
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8087
+      - SPRING_APPLICATION_JSON={"eureka":{"client":{"serviceUrl":{"defaultZone":"http://eureka-server:8761/eureka"}}}}
+      - SPRING_DATASOURCE_URL=jdbc:mysql://shoppy-mysqldb:3306/shopping_app?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_PASSWORD=springstudent
+      - SPRING_DATASOURCE_USERNAME=springstudent
+      - SPRING_ZIPKIN_BASE_URL=http://zipkin:9411
+
+networks:
+  spring:
+    driver: bridge

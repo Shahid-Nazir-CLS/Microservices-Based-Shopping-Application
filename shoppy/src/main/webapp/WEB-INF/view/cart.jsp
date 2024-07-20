@@ -46,10 +46,13 @@
                             <div class="col-md-7">
                                 <!-- Cart Items -->
                                 <c:forEach items="${cartItems}" var="item">
-                                    <div class="card col-md-9">
+                                    <div class="card col-md-9" data-item-id="${item.itemDTO.id}"
+                                        data-quantity="${item.quantity}"
+                                        data-remaining="${item.itemDTO.remainingQuantity}">
                                         <img src="${item.itemDTO.imageURL}" class="cart-img" alt="${item.itemDTO.name}">
                                         <div class="card-body">
                                             <h5 class="card-title">${item.itemDTO.name}</h5>
+                                            <h5 class="card-title">Rem Quantity : ${item.itemDTO.remainingQuantity}</h5>
                                             <p class="card-text">${item.itemDTO.description}</p>
                                             <p class="card-text"><strong>$ ${item.itemDTO.price}</strong></p>
                                             <div class="d-flex justify-content-between align-items-center">
@@ -132,6 +135,24 @@
                     // createOrder
                     function checkAddressAndBuy(customerId) {
                         var addressExists = document.getElementById('addressExists').value;
+                        var itemsValid = true;
+
+                        // Loop through each item card to validate quantities
+                        document.querySelectorAll('.card').forEach(function (card) {
+                            var quantity = parseInt(card.getAttribute('data-quantity'));
+                            var remaining = parseInt(card.getAttribute('data-remaining'));
+
+                            if (quantity > remaining) {
+                                itemsValid = false;
+                                alert('Quantity for item ' + card.querySelector('.card-title').innerText + ' exceeds remaining stock.');
+                                return false; // Exit loop if any item is invalid
+                            }
+                        });
+
+                        if (!itemsValid) {
+                            return; // Exit function if validation fails
+                        }
+
                         if (addressExists === 'true') {
                             location.href = '/orderCreate/' + customerId;
                         } else {

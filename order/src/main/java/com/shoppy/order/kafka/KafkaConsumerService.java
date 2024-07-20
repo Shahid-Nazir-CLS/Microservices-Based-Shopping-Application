@@ -33,7 +33,8 @@ public class KafkaConsumerService {
             OrderDTO orderDTO = orderService.createOrder(userId);
             System.out.println(orderDTO);
         } catch (Exception e) {
-
+            System.out.println(e.getMessage());
+            System.out.println("some issue");
         }
     }
 

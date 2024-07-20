@@ -18,7 +18,7 @@ public class ItemService {
     @Autowired
     private RestTemplate restTemplate;
 
-    private static final String BASE_URL = "http://item-service/api/v1/items";
+    private static final String BASE_URL = "http://api-gateway/api/v1/items";
 
     public ItemsResponseDTO getItems(String pageNumber) {
         return restTemplate.getForObject(BASE_URL + "?page=" + pageNumber, ItemsResponseDTO.class);
