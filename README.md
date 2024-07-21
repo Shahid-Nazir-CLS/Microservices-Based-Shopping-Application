@@ -58,6 +58,8 @@ This shopping app is a pet project designed to showcase and implement skills in 
 - **Purpose:** Centralizes configuration management for all microservices.
 - **Functions:** Provides configuration properties to microservices from a centralized GitHub repository.
 
+![screenshot](Shoppy(2).jpg)
+
 ## Interaction Flow
 
 1. **Client Interaction:**
