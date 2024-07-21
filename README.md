@@ -81,10 +81,22 @@ This shopping app is a pet project designed to showcase and implement skills in 
    - Microservices register with the Eureka Server for dynamic discovery.
    - The API Gateway uses Eureka to route requests to the correct microservice instances.
    - Microservices pull their configuration from the Config Server, which retrieves configurations from a GitHub repository.
+  
+## Enhancements
+
+- **Swagger for Interactive Documentation:**
+  - Swagger is integrated to provide interactive documentation for the RESTful APIs, making it easier to explore and test the endpoints.
+
+- **Zipkin for Distributed Tracing:**
+  - Zipkin is used for distributed tracing, allowing for tracking and visualization of requests across microservices, which aids in debugging and performance monitoring.
+
+- **Logging and Exception Handling:**
+  - Comprehensive logging and exception handling are implemented to improve error tracking, debugging, and overall system reliability.
 
 ## Summary
 
-This architecture effectively utilizes a microservices approach to manage different aspects of the shopping application, incorporating modern technologies such as Kafka for messaging, OAuth2 for authentication, and Eureka for service discovery. The addition of an API Gateway and a Config Server enhances the scalability and maintainability of the system.
+This architecture effectively utilizes a microservices approach to manage different aspects of the shopping application, incorporating modern technologies such as Kafka for messaging, OAuth2 for authentication, and Eureka for service discovery. The addition of an API Gateway and a Config Server enhances the scalability and maintainability of the system. Furthermore, Swagger provides interactive API documentation, Zipkin facilitates distributed tracing, and robust logging and exception handling contribute to a more resilient and maintainable application.
+
 
 ### Services
 
