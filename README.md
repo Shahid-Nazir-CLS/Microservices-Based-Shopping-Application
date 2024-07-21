@@ -58,7 +58,7 @@ This shopping app is a pet project designed to showcase and implement skills in 
 - **Purpose:** Centralizes configuration management for all microservices.
 - **Functions:** Provides configuration properties to microservices from a centralized GitHub repository.
 
-![screenshot](Shoppy(2).jpg)
+![screenshot](Shoppy(1)(1).jpg)
 
 ## Interaction Flow
 
@@ -183,5 +183,8 @@ Ensure the following components are installed and configured:
 4. **Run Services**
 - Open separate VS Code windows for the shoppy (frontend client) and customer services.
 - Open another VS Code window for all other services (Item, Cart, Order, Payment).
+
+5. **Swagger**
+- You can access Swagger UI at http://localhost:port/swagger-ui/index.html, where you will see a beautiful user interface to interact with your endpoints
 
 Monitor Services: Ensure Zipkin, Zookeeper, and Kafka are running alongside your VS Code instances.
