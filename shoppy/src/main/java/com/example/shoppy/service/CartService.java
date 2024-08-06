@@ -14,7 +14,7 @@ public class CartService {
     @Autowired
     private RestTemplate restTemplate;
 
-    private static final String BASE_URL = "http://cart-service/api/v1/carts/";
+    private static final String BASE_URL = "http://api-gateway/api/v1/carts/";
 
     public CartDTO getUserCart(int userId) {
         return restTemplate.getForObject(BASE_URL + userId, CartDTO.class);

@@ -14,8 +14,8 @@ public class CustomerService {
     @Autowired
     private RestTemplate restTemplate;
 
-    private static final String BASE_CUSTOMER_URL = "http://customer-service/api/v1/customers/";
-    private static final String BASE_ADDRESS_URL = "http://customer-service/api/v1/addresses/";
+    private static final String BASE_CUSTOMER_URL = "http://api-gateway/api/v1/customers/";
+    private static final String BASE_ADDRESS_URL = "http://api-gateway/api/v1/addresses/";
 
     public CustomerDTO getCustomer(int customerId) {
         return restTemplate.getForObject(BASE_CUSTOMER_URL + customerId, CustomerDTO.class);

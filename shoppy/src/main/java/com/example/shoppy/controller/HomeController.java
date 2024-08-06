@@ -43,7 +43,7 @@ public class HomeController {
         ItemsResponseDTO response = itemService.getItems(pageNumber);
         model.addAttribute("items", response.getEmbeddedItems().getItems());
         model.addAttribute("totalPages", response.getPage().getTotalPages());
-        model.addAttribute("currPageNumber", response.getPage().getNumber());
+        model.addAttribute("java -jar zipkin-server-3.3.0-exec.jarcurrPageNumber", response.getPage().getNumber());
         model.addAttribute("linksProvided", true);
         model.addAttribute("isLoggedIn", false);
         model.addAttribute("username", userSessionDTO.getUsername());

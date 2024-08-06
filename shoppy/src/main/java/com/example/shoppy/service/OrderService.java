@@ -22,7 +22,7 @@ public class OrderService {
     @Autowired
     private KafkaProducerService kafkaProducerService;
 
-    private static final String BASE_URL = "http://order-service/api/v1/orders/";
+    private static final String BASE_URL = "http://api-gateway/api/v1/orders/";
 
     public OrderDTO cancelOrder(int orderId) {
         ResponseEntity<OrderDTO> response = restTemplate.exchange(BASE_URL + "cancel/" + orderId, HttpMethod.PUT, null, OrderDTO.class);
@@ -31,6 +31,7 @@ public class OrderService {
 
     public void createOrder(int customerId) {
         // Send message to Kafka
+        System.out.println("sent order");
         kafkaProducerService.sendMessage(new String(String.valueOf(customerId)));
     }
 
