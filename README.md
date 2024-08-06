@@ -180,7 +180,9 @@ Ensure the following components are installed and configured:
   **Zipkin Dashboard**
     Access the Zipkin dashboard at http://127.0.0.1:9411/
    
-4. **Run Services**
+4. **Run Services using an IDE**
+- Open the project in VSCode or IntelliJ.
+- Run the application using the embedded Tomcat server.
 - Open separate VS Code windows for the shoppy (frontend client) and customer services.
 - Open another VS Code window for all other services (Item, Cart, Order, Payment).
 
